@@ -46,6 +46,8 @@ public class DataServingController {
         File file = File.createTempFile(sdf.format(date), "");
         file.deleteOnExit();
         multipartFile.transferTo(file);
+        crimeRepository.deleteAll();
+        crimeCategoryRepository.deleteAll();
         dataUploadService.saveData(file);
         return new ResponseEntity<>("File uploaded! Results of reading it should be available soon.", HttpStatus.OK);
     }

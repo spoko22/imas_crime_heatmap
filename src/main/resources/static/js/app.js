@@ -43,7 +43,7 @@
         $scope.filterUpdateProgress = false;
         $scope.map = {};
         $scope.heatmap = {};
-        $scope.testData = { max:50, data : []};
+        $scope.testData = { data : []};
         
         $scope.uploadFile = function () {
             var file = $scope.myFile;
@@ -79,6 +79,11 @@
                 alert(response);
             });
         };
+
+        angular.element(document).ready(function () {
+            if(window.location.pathname == "/" )
+                $scope.applyFilters();
+        });
     }]);
     
 })();
