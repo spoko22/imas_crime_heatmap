@@ -1,0 +1,162 @@
+<!doctype html>
+<html ng-app="heatMapApp">
+
+<head>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%
+        }
+    </style>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href="bower_components/nya-bootstrap-select/dist/css/nya-bs-select.min.css" rel="stylesheet">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+
+</head>
+
+<body role="document" ng-controller="HeatMapController as hmctrl" style="width:100%; height:100%;">
+
+    <!--     Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">IMAS - crime map</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/">Map</a></li>
+                    <li><a href="/html/file.html">Read file</a></li>
+                    <li data-toggle="modal" data-target="#myModal" ng-click="updateCategories();"><a href="#">Filter results</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Filter the results</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="margin-bottom: 10px;"><button type="button" class="btn btn-default dropdown-toggle" ng-click="updateCategories();"><span class="glyphicon glyphicon-refresh"></span> Refresh filters</button></div>
+                    <ol class="nya-bs-select" ng-model="chosenCategories" data-live-search="true" data-size="10" multiple>
+                        <li nya-bs-option="category in availableCategories" data-value="category.id">
+                            <!-- the text content of anchor element will be used for search -->
+                            <a>
+                                {{category.crimeName}}
+                                <span class="glyphicon glyphicon-ok check-mark"></span>
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="applyFilters();">Apply filters</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="map"></div>
+
+    <script>
+        var testData = {
+            max: 8,
+            data: [{lat: 51.50489, lng:-0.128402, count: 3}]
+        };
+
+        function initMap() {
+            // don't forget to add gmaps-heatmap.js
+            var myLatlng = new google.maps.LatLng(53.54, -2.11);
+            // map options,
+            var myOptions = {
+                zoom: 14
+                , center: myLatlng
+            };
+            map = new google.maps.Map(document.getElementById('map'), myOptions);
+
+            heatmap = new HeatmapOverlay(map, {
+                // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+                "radius": 0.01
+                , "maxOpacity": 0.7,
+                // scales the radius based on map zoom
+                "scaleRadius": true,
+                // if set to false the heatmap uses the global maximum for colorization
+                // if activated: uses the data maximum within the current map boundaries
+                //   (there will always be a red spot with useLocalExtremas true)
+                "useLocalExtrema": true,
+                // which field name in your data represents the latitude - default "lat"
+                latField: 'lat',
+                // which field name in your data represents the longitude - default "lng"
+                lngField: 'lng',
+                // which field name in your data represents the data value - default "value"
+                valueField: 'count'
+            });
+            addClickListener(map, heatmap);
+            return heatmap;
+        }
+
+        function setMapData(data){
+            heatmap.setData(data);
+        }
+
+        function addClickListener(map, heatmap) {
+            google.maps.event.addListener(map, "click", function (e) {
+                var latLng = e.latLng;
+                var lat = latLng.lat();
+                var lng = latLng.lng();
+                console.log(lat + ', ' + lng);
+                var dataObject = {
+                    lat: lat
+                    , lng: lng
+                    , count: 1
+                };
+                heatmap.addData(dataObject);
+//                var someVar = savedData;
+//                for(var i = 0; i<someVar.data.length; i++) {
+//                    console.log(someVar.data[i]);
+//                    heatmap.addData(someVar.data[i]);
+//                }
+                console.log(heatmap.heatmap.getData());
+            });
+        }
+    </script>
+    <!--/.nav-collapse -->
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+<script src="js/app.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN561v3-ogjZGS0pttGLVIznlrknXt2YE&v=3.exp&libraries=visualization"></script>
+<script src="js/heatmap.js"></script>
+<script src="js/gmaps-heatmap.js"></script>
+<script src="bower_components/nya-bootstrap-select/dist/js/nya-bs-select.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var heatmap = initMap();
+    });
+</script>
+
+</html>

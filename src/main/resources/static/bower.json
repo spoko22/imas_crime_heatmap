@@ -1,0 +1,21 @@
+{
+  "name": "IMAS heatmap",
+  "authors": [
+    "spoko22 <mic.rad20@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "nya-bootstrap-select": "^2.1.6"
+  }
+}

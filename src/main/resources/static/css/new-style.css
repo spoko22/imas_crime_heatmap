@@ -1,0 +1,54 @@
+body {
+    background-color: rgba(0, 0, 0, 0.75) !important;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    position: relative;
+    padding-top:70px;
+}
+
+.file-form-container {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+    padding-top: 16px;
+}
+
+.download-container {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+
+.nav.tab{
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.btn.send{
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.ng-invalid.ng-dirty{
+    border-color: #FA787E;
+}
+.ng-valid.ng-dirty{
+    border-color: #78FA89;
+}
+
+div.single-text{
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
